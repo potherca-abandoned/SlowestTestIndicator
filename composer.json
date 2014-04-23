@@ -1,0 +1,29 @@
+{
+    "name": "Potherca/SlowestTestIndicator",
+    "version": "0.0.0-alpha",
+    "homepage": "http://Pother.ca/SlowestTestIndicator",
+    "license": "GPL-3.0+",
+    "authors": [
+        {
+            "name": "Potherca",
+            "email": "potherca@gmail.com",
+            "homepage": "http://pother.ca/",
+            "role": "Developer"
+        },
+        {
+            "name": "ArjanK",
+            "email": "",
+            "homepage": "",
+            "role": "Developer"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "4.0.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Potherca\\": "src/"
+        }
+    }
+}
