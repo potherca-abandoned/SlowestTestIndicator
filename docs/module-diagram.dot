@@ -1,0 +1,126 @@
+digraph Diagram { 
+#/////////////////////////////// General Styles \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    graph [
+        label = "Slowest Test Indicator Module"
+        labelloc = t
+
+        //dpi = 200
+        ranksep=0.65
+        nodesep=0.40
+        rankdir=LR
+        bgcolor="#FFFFDD"
+        
+        style="dotted, filled"
+        fillcolor="#FFFFFF"
+        compound=true
+    ]
+
+    edge [arrowhead=none]
+
+    node [
+        labeljust="l"
+        colorscheme="pastel13"
+        style=filled
+        fillcolor=3
+        shape=record
+    ]
+
+#/////////////////////////// Sub Graphs and Clusters \\\\\\\\\\\\\\\\\\\\\\\\\\\
+    // -------------------------------------------------------------------------
+    // Data Definitions
+    // -------------------------------------------------------------------------
+    subgraph cluster_1 {
+        label = "[1] Input"        
+        input_data [label="{XML|JSON|...}"]
+        input_format [label="Input Format"]
+        output_format [label="Output Format"]
+    }
+
+    subgraph cluster_2 {
+        label = "[2] Transformed Data"
+        transformed_data [label="{Multi Dimensional Array}"]
+    }
+    
+    subgraph cluster_3 {
+        label = "[3] Sorted Data"
+        sorted_data [label="{Multi Dimensional Array}"]
+    }
+    
+    subgraph cluster_4 {
+        label = "[4] Output"
+        // Data
+        output_data [label="{HTML\n(template)|XML|JSON|...}"]
+    }
+    
+    // -------------------------------------------------------------------------
+    // Decisions
+    // -------------------------------------------------------------------------
+    subgraph cluster_A {
+        label = "[A] Transform Input To Data"
+        node [fillcolor=2]
+        transform_from_decision [label="{Transform from which format?}"]
+        
+        {// Functions
+            node [style=filled, fillcolor=1]
+            a3 [label="...ToArrayTransformer"]
+            a2 [label="JsonToArrayTransformer"]
+            a1 [label="XxmlToArrayTransformer"]
+        }
+    }
+    
+    subgraph cluster_B {
+        label = "[B] Sort Data"
+        node [fillcolor=2]
+        sort_decision [label="{Sort using which key?}"]
+        {// Functions
+            node [style=filled, fillcolor=1]
+            b1 [label="SortByDuration"]
+        }
+    }
+    
+    subgraph cluster_C {
+        label = "[C] Transform Data To Output "
+        node [fillcolor=2]
+        transform_to_decision [label="{Transform to which format?}"]
+        
+        {// Functions
+            node [style=filled, fillcolor=1]
+            c4 [label="ArrayTo..."]
+            c3 [label="ArrayToJson"]
+            c2 [label="ArrayToXml"]
+            c1 [label="ArrayToHtml"]
+        }
+    
+    }
+#//////////////////////////////// Connections \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    {// Implements
+        node[group=main];
+        edge [arrowhead=empty, style=dashed];
+
+        transform_from_decision -> a1 [label="XML"]
+        transform_from_decision -> a2 [label="JSON"]
+        transform_from_decision -> a3 [label="..."]
+        
+        sort_decision -> b1 [label="duration"] 
+        
+        transform_to_decision -> c1 [label="HTML"]
+        transform_to_decision -> c2 [label="XML"]
+        transform_to_decision -> c3 [label="JSON"]
+        transform_to_decision -> c4 [label="..."]
+    }
+
+    {// Extends
+        edge [arrowhead=empty]
+        input_format -> transform_from_decision [ltail=cluster_1, lhead=cluster_A]
+        a2 -> transformed_data [ltail=cluster_A, lhead=cluster_2]
+        transformed_data -> sort_decision [ltail=cluster_2, lhead=cluster_B]
+        b1 -> sorted_data [ltail=cluster_B, lhead=cluster_3]
+        sorted_data -> transform_to_decision  [ltail=cluster_3, lhead=cluster_C]
+        c3 -> output_data [ltail=cluster_C, lhead=cluster_4]
+    }
+    
+    {// Composits
+        edge [arrowtail=diamond, arrowhead=none]
+    }
+}//Diagram
+
